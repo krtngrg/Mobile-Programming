@@ -1,0 +1,149 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+Step 4: Custom Layout (list_item.xml)
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imgFruit"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="10dp"/>
+
+    <TextView
+        android:id="@+id/tvFruit"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+package com.example.customlistviewdemo;
+
+import android.content.Context;
+import android.view.*;
+import android.widget.*;
+import java.util.List;
+
+public class FruitAdapter extends ArrayAdapter<String> {
+
+    Context context;
+    String[] fruits;
+    int[] images;
+
+    public FruitAdapter(Context context, String[] fruits, int[] images) {
+        super(context, R.layout.list_item, fruits);
+        this.context = context;
+        this.fruits = fruits;
+        this.images = images;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.list_item, parent, false);
+
+        ImageView img = view.findViewById(R.id.imgFruit);
+        TextView tv = view.findViewById(R.id.tvFruit);
+
+        img.setImageResource(images[position]);
+        tv.setText(fruits[position]);
+
+        return view;
+    }
+}
+
+package com.example.customlistviewdemo;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ListView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    ListView listView;
+
+    String[] fruits = {"Apple", "Banana", "Mango", "Orange"};
+    int[] images = {
+            R.drawable.apple,
+            R.drawable.banana,
+            R.drawable.mango,
+            R.drawable.orange
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        listView = findViewById(R.id.listView);
+
+        FruitAdapter adapter = new FruitAdapter(this, fruits, images);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+            intent.putExtra("fruitName", fruits[position]);
+            intent.putExtra("fruitImage", images[position]);
+            startActivity(intent);
+        });
+    }
+}
+
+activity_detail.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imgDetail"
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
+
+    <TextView
+        android:id="@+id/tvDetail"
+        android:textSize="22sp"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+DetailActivity.java
+package com.example.customlistviewdemo;
+
+import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class DetailActivity extends AppCompatActivity {
+
+    ImageView img;
+    TextView tv;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_detail);
+
+        img = findViewById(R.id.imgDetail);
+        tv = findViewById(R.id.tvDetail);
+
+        String name = getIntent().getStringExtra("fruitName");
+        int image = getIntent().getIntExtra("fruitImage", 0);
+
+        tv.setText(name);
+        img.setImageResource(image);
+    }
+}

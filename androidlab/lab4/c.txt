@@ -1,0 +1,131 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gridView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:numColumns="3"
+    android:verticalSpacing="10dp"
+    android:horizontalSpacing="10dp"
+    android:stretchMode="columnWidth"/>
+
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageView"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:scaleType="centerCrop"/>
+
+package com.example.imagegridviewdemo;
+
+import android.content.Context;
+import android.view.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+
+public class ImageAdapter extends BaseAdapter {
+
+    Context context;
+
+    int[] images = {
+            R.drawable.img1, R.drawable.img2, R.drawable.img3,
+            R.drawable.img4, R.drawable.img5, R.drawable.img6,
+            R.drawable.img7, R.drawable.img8
+    };
+
+    public ImageAdapter(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public int getCount() {
+        return images.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return images[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.grid_item, parent, false);
+
+        ImageView imageView = view.findViewById(R.id.imageView);
+        imageView.setImageResource(images[position]);
+
+        return view;
+    }
+}
+
+package com.example.imagegridviewdemo;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.GridView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    GridView gridView;
+
+    int[] images = {
+            R.drawable.img1, R.drawable.img2, R.drawable.img3,
+            R.drawable.img4, R.drawable.img5, R.drawable.img6,
+            R.drawable.img7, R.drawable.img8
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        gridView = findViewById(R.id.gridView);
+
+        ImageAdapter adapter = new ImageAdapter(this);
+        gridView.setAdapter(adapter);
+
+        gridView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(MainActivity.this, FullscreenActivity.class);
+            intent.putExtra("image", images[position]);
+            startActivity(intent);
+        });
+    }
+}
+
+activity_fullscreen.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fullImage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="fitCenter"/>
+FullscreenActivity.java
+package com.example.imagegridviewdemo;
+
+import android.os.Bundle;
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class FullscreenActivity extends AppCompatActivity {
+
+    ImageView imageView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_fullscreen);
+
+        imageView = findViewById(R.id.fullImage);
+
+        int image = getIntent().getIntExtra("image", 0);
+        imageView.setImageResource(image);
+    }
+}

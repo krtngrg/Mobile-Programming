@@ -1,0 +1,128 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"/>
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvName"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+package com.example.recyclerviewcontactdemo;
+
+public class Contact {
+    String name, phone;
+
+    public Contact(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
+}
+
+package com.example.recyclerviewcontactdemo;
+
+import android.content.Context;
+import android.view.*;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+
+public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
+
+    Context context;
+    List<Contact> contactList;
+
+    public ContactAdapter(Context context, List<Contact> contactList) {
+        this.context = context;
+        this.contactList = contactList;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvName, tvPhone;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvPhone = itemView.findViewById(R.id.tvPhone);
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                String name = contactList.get(position).name;
+
+                Toast.makeText(context,
+                        "Calling " + name + "...",
+                        Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.contact_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Contact contact = contactList.get(position);
+        holder.tvName.setText(contact.name);
+        holder.tvPhone.setText(contact.phone);
+    }
+
+    @Override
+    public int getItemCount() {
+        return contactList.size();
+    }
+}
+
+package com.example.recyclerviewcontactdemo;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.*;
+import java.util.*;
+
+public class MainActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    List<Contact> contactList;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        recyclerView = findViewById(R.id.recyclerView);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        contactList = new ArrayList<>();
+        contactList.add(new Contact("Ram", "9841000001"));
+        contactList.add(new Contact("Sita", "9841000002"));
+        contactList.add(new Contact("Hari", "9841000003"));
+        contactList.add(new Contact("Gita", "9841000004"));
+
+        ContactAdapter adapter = new ContactAdapter(this, contactList);
+        recyclerView.setAdapter(adapter);
+    }
+}
