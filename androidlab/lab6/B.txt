@@ -1,0 +1,61 @@
+import SwiftUI
+
+struct ContentView: View {
+    @State private var length = ""
+    @State private var width = ""
+    @State private var area: Double?
+    @State private var perimeter: Double?
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Rectangle Calculator")
+                .font(.title)
+                .fontWeight(.bold)
+
+            TextField("Length", text: $length)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            TextField("Width", text: $width)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            Button("Calculate") {
+                calculate()
+            }
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+
+            if let area = area {
+                Text("Area: \(area, specifier: "%.2f")")
+                    .font(.headline)
+            }
+
+            if let perimeter = perimeter {
+                Text("Perimeter: \(perimeter, specifier: "%.2f")")
+                    .font(.headline)
+            }
+
+            Spacer()
+        }
+        .padding()
+    }
+
+    func calculate() {
+        guard let l = Double(length),
+              let w = Double(width) else {
+            area = nil
+            perimeter = nil
+            return
+        }
+
+        area = l * w
+        perimeter = 2 * (l + w)
+    }
+}
+
+#Preview {
+    ContentView()
+}

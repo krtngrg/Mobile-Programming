@@ -1,0 +1,60 @@
+
+import SwiftUI
+
+struct ContentView: View {
+    @State private var principal = ""
+    @State private var rate = ""
+    @State private var time = ""
+    @State private var result: Double?
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Simple Interest Calculator")
+                .font(.title)
+                .fontWeight(.bold)
+
+            TextField("Principal (P)", text: $principal)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            TextField("Rate (R %)", text: $rate)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            TextField("Time (T in years)", text: $time)
+                .keyboardType(.decimalPad)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+
+            Button("Calculate") {
+                calculateInterest()
+            }
+            .padding()
+            .background(Color.blue)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+
+            if let result = result {
+                Text("Simple Interest: \(result, specifier: "%.2f")")
+                    .font(.headline)
+            }
+
+            Spacer()
+        }
+        .padding()
+    }
+
+    func calculateInterest() {
+        guard let p = Double(principal),
+              let r = Double(rate),
+              let t = Double(time) else {
+            result = nil
+            return
+        }
+
+        result = (p * r * t) / 100
+    }
+}
+
+#Preview {
+    ContentView()
+}
