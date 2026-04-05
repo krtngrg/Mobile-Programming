@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*"
+    android:layout_marginTop="100dp">
+
+    <TableRow>
+        <TextView
+            android:text="Subject"
+            android:padding="10dp"/>
+
+        <TextView
+            android:text="Marks"
+            android:padding="10dp"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Math"
+            android:padding="10dp"/>
+
+        <TextView
+            android:text="85"
+            android:padding="10dp"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="Science"
+            android:padding="10dp"/>
+
+        <TextView
+            android:text="90"
+            android:padding="10dp"/>
+    </TableRow>
+
+</TableLayout>
